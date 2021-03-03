@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Show list</title>
+</head>
+<body>
+<h3>List Product</h3>
+<p><a href="/products/create">Add new product</a></p>
+<table id="customers">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Origin</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="c:${list}">
+        <tr>
+            <td th:text="${c.name}"></td>
+            <td th:text="${c.origin}"></td>
+            <td><a th:href="@{/products/edit/{id}(id=${c.id})}">Edit</a></td>
+            <td><a th:href="@{/products/delete/{id}(id=${c.getId()})}" onclick="return confirm('Bạn có muốn xóa?');">Delete</a></td>
+            <td><a th:href="@{/products/view/{id}(id=${c.id})}">View</a></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
