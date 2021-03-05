@@ -31,7 +31,7 @@ public class ProductController {
     public ModelAndView create(@ModelAttribute Product product) {
         int id = productService.findAll().size();
         product.setId(id);
-        productService.create(product);
+        productService.save(product);
         ModelAndView modelAndView = new ModelAndView("create", "product", new Product());
         modelAndView.addObject("mess", "Tao moi thanh cong product ten la " + product.getName());
         return modelAndView;
@@ -46,13 +46,13 @@ public class ProductController {
     @PostMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable int id, @ModelAttribute Product product) {
         product.setId(id);
-        productService.save(product, id);
+        productService.update(product);
         return new ModelAndView("list", "list", productService.findAll());
     }
     @GetMapping("/delete/{id}")
     public ModelAndView delete(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/products");
-        productService.remove(id);
+        productService.remove(productService.findById(id));
         return modelAndView;
     }
 }

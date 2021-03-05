@@ -4,8 +4,13 @@ import java.util.List;
 
 public interface IService<T> {
     List<T> findAll();
-    T findById(int id);
-    boolean create(T t);
-    boolean save(T t, int id);
-    void remove(int id);
+
+    T findById(Integer id);
+
+    T update(T model);
+
+    T save(T model);
+
+    T remove(T model);
+//    void remove(Integer id);
 }
