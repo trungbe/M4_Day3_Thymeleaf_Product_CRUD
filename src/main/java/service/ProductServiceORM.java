@@ -100,6 +100,15 @@ public class ProductServiceORM implements IProductService {
             entityManager.remove(product);
         }
     }
+
+    @Override
+    public List<Product> findByName(String name) {
+        String query = "select p from Product as p where p.name like :name";
+        TypedQuery queryFind = entityManager.createQuery(query,Product.class);
+        String nameFind ="%" + name + "%";
+        queryFind.setParameter("name", nameFind);
+        return queryFind.getResultList();
+    }
 }
 
 

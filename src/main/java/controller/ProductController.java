@@ -6,8 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import service.IProductService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/products")
@@ -40,24 +41,34 @@ public class ProductController {
 
     @GetMapping("/edit/{id}")
     public String showFormEdit(@PathVariable int id, ModelMap modelMap) {
-        Product product =productService.findById(id);
+        Product product = productService.findById(id);
         modelMap.addAttribute("product", product);
         return "edit";
     }
+
     @PostMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable int id, @ModelAttribute Product product) {
         product.setId(id);
         productService.update(product);
         return new ModelAndView("list", "list", productService.findAll());
     }
+
     @GetMapping("/delete/{id}")
     public ModelAndView delete(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/products");
         productService.remove(id);
         return modelAndView;
     }
+
     @GetMapping("/view/{id}")
-    public ModelAndView viewDetail(@PathVariable int id){
+    public ModelAndView viewDetail(@PathVariable int id) {
         return new ModelAndView("view", "product", productService.findById(id));
+    }
+
+    @PostMapping("")
+    public ModelAndView searchProductByName(@RequestParam String name) {
+        List<Product> products = productService.findByName(name);
+        if (products.size() == 0) return new ModelAndView("error-404");else
+        return new ModelAndView("list", "list", products);
     }
 }

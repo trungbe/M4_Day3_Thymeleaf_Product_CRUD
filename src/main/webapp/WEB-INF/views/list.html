@@ -7,7 +7,11 @@
 </head>
 <body>
 <h3>List Product</h3>
-<p><a href="/products/create">Add new product</a></p>
+<form action="/products" method="post">
+    <input type="text" name="name" placeholder="Input name search">
+    <input type="submit" value="Search">
+</form>
+<h4><a href="/products/create">Add new product</a></h4>
 <table id="customers">
     <thead>
     <tr>
