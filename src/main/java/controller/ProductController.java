@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import service.IProductService;
 
 @Controller
@@ -52,7 +53,11 @@ public class ProductController {
     @GetMapping("/delete/{id}")
     public ModelAndView delete(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/products");
-        productService.remove(productService.findById(id));
+        productService.remove(id);
         return modelAndView;
+    }
+    @GetMapping("/view/{id}")
+    public ModelAndView viewDetail(@PathVariable int id){
+        return new ModelAndView("view", "product", productService.findById(id));
     }
 }

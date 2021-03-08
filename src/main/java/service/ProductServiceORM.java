@@ -1,26 +1,27 @@
 package service;
 
 import model.Product;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public class ProductServiceORM implements IProductService {
-    @Autowired
-    private EntityManager entityManager;
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
+//    @Autowired
+//    private EntityManager entityManager;
+//    @Autowired
+//    private SessionFactory sessionFactory;
 
     @Override
     public List<Product> findAll() {
-        String query = "SELECT c FROM Product AS c";
-        TypedQuery<Product> queryFind = sessionFactory.openSession().createQuery(query, Product.class);
+        String query = "SELECT p FROM Product AS p";
+        TypedQuery<Product> queryFind = entityManager.createQuery(query, Product.class);
         return queryFind.getResultList();
     }
 
@@ -34,71 +35,70 @@ public class ProductServiceORM implements IProductService {
 
     @Override
     public Product update(Product model) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.update(model);
-            transaction.commit();
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+//        Session session = null;
+//        Transaction transaction = null;
+//        try {
+//            session = sessionFactory.openSession();
+//            transaction = session.beginTransaction();
+//            session.update(model);
+//            transaction.commit();
+//            return model;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//        } finally {
+//            if (session != null) {
+//                session.close();
+//            }
+//        }
+        if (model.getId() != 0)
+            entityManager.merge(model);//sua
         return null;
     }
 
     @Override
     public Product save(Product model) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.save(model);
-            transaction.commit();
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        if (model.getId() != 0) {
+            entityManager.merge(model);//sua
+        } else
+            entityManager.persist(model);//them
         return null;
     }
 
+//    @Override
+//    public Product save(Product model) {
+////        Session session = null;
+////        Transaction transaction = null;
+////        try {
+////            session = sessionFactory.openSession();
+////            transaction = session.beginTransaction();
+////            session.save(model);
+////            transaction.commit();
+////            return model;
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////            if (transaction != null) {
+////                transaction.rollback();
+////            }
+////        } finally {
+////            if (session != null) {
+////                session.close();
+////            }
+////        }
+//
+//        return null;
+//
+//
+//    }
+
     @Override
-    public Product remove(Product model) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.remove(model);
-            transaction.commit();
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+    public void remove(Integer id) {
+        Product product = findById(id);
+        if (product != null) {
+            entityManager.remove(product);
         }
-        return null;
     }
 }
 

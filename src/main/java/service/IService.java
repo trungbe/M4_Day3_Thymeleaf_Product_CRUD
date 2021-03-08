@@ -11,6 +11,6 @@ public interface IService<T> {
 
     T save(T model);
 
-    T remove(T model);
-//    void remove(Integer id);
+//    T remove(T model);
+    void remove(Integer id);
 }
